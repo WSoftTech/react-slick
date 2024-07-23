@@ -30,6 +30,7 @@ import ResizeObserver from "resize-observer-polyfill";
 export class InnerSlider extends React.Component {
   constructor(props) {
     super(props);
+    this.isChangingSlide = false;
     this.list = null;
     this.track = null;
     this.state = {
@@ -426,7 +427,22 @@ export class InnerSlider extends React.Component {
       }, speed);
     });
   };
-  changeSlide = (options, dontAnimate = false) => {
+  changeSlide = (options, dontAnimate = false, skipDelay = false) => {
+    if (this.isChangingSlide && !skipDelay) {
+      return; // กันไม่ให้คลิกซ้ำถ้ากำลังเปลี่ยนสไลด์อยู่
+    }
+    if (
+      !skipDelay &&
+      (options.message == "next" || options.message == "previous")
+    ) {
+      const delay = 1500; // 1.5 secs
+      this.isChangingSlide = true; // ใส่ flag กันการเปลี่ยนสไลด์ซ้ำระหว่างดีเลย์
+      setTimeout(() => {
+        this.isChangingSlide = false; // ลบ flag ให้กลับมาเป็นสถานะปกติ
+        this.changeSlide(options, dontAnimate, true); // เรียกตัวเองซ้ำหลังจากดีเลย์
+      }, delay);
+      return; // อย่าลืม return เพื่อ skip อันปัจจุบัน ไปรอทำอันข้างในดีเลย์
+    }
     const spec = { ...this.props, ...this.state };
     let targetSlide = changeSlide(spec, options);
     if (targetSlide !== 0 && !targetSlide) return;
