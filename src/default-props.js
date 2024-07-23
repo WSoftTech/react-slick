@@ -14,6 +14,7 @@ let defaultProps = {
   className: "",
   cssEase: "ease",
   customPaging: i => <button>{i + 1}</button>,
+  changeSlideDelay: 0,
   dots: false,
   dotsClass: "slick-dots",
   draggable: true,

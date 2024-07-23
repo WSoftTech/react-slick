@@ -37,7 +37,8 @@ export class InnerSlider extends React.Component {
       ...initialState,
       currentSlide: this.props.initialSlide,
       targetSlide: this.props.initialSlide ? this.props.initialSlide : 0,
-      slideCount: React.Children.count(this.props.children)
+      slideCount: React.Children.count(this.props.children),
+      changeSlideDelay: this.props.changeSlideDelay
     };
     this.callbackTimers = [];
     this.clickable = true;
@@ -435,12 +436,11 @@ export class InnerSlider extends React.Component {
       !skipDelay &&
       (options.message == "next" || options.message == "previous")
     ) {
-      const delay = 1500; // 1.5 secs
       this.isChangingSlide = true; // ใส่ flag กันการเปลี่ยนสไลด์ซ้ำระหว่างดีเลย์
       setTimeout(() => {
         this.isChangingSlide = false; // ลบ flag ให้กลับมาเป็นสถานะปกติ
         this.changeSlide(options, dontAnimate, true); // เรียกตัวเองซ้ำหลังจากดีเลย์
-      }, delay);
+      }, this.state.changeSlideDelay);
       return; // อย่าลืม return เพื่อ skip อันปัจจุบัน ไปรอทำอันข้างในดีเลย์
     }
     const spec = { ...this.props, ...this.state };
