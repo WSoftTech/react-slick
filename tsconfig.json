@@ -1,0 +1,3 @@
+{
+  "include": ["src/**/*.ts", "src/**/*.tsx", "src/react-slick.d.ts"]
+}
